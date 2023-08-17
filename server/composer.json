@@ -13,5 +13,8 @@
             "name": "Артурио Арчеводов"
         }
     ],
-    "minimum-stability": "alpha"
+    "minimum-stability": "alpha",
+    "require": {
+        "ext-sqlite3": "*"
+    }
 }

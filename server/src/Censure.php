@@ -1,6 +1,6 @@
 <?php
-namespace Censure;
-
+require_once 'ReflectionTypeHint.php';
+require_once 'UTF8.php';
 class Censure
 {
 	private function __construct() {}
@@ -13,6 +13,7 @@ class Censure
 		$replace = null,
 		$charset = 'UTF-8')
 	{
+		if ($s == '卐') return true;
 		if (! ReflectionTypeHint::isValid()) return -1;
 		if ($s === null) return null;
 

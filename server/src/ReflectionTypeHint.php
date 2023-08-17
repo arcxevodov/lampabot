@@ -1,6 +1,4 @@
 <?php
-
-namespace Censure;
 use ReflectionMethod;
 
 class ReflectionTypeHint

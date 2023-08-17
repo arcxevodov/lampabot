@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb97b8f8833608015fe46d1b0b7181b3",
+    "content-hash": "066188684327830be695c6095d2ead14",
     "packages": [],
     "packages-dev": [],
     "aliases": [],
@@ -12,7 +12,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-sqlite3": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
 }
