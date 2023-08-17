@@ -1,0 +1,17 @@
+{
+    "name": "lampabot/server",
+    "description": "Бот для ламповой беседы перваков КПК",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Lampabot\\Server\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Артурио Арчеводов"
+        }
+    ],
+    "minimum-stability": "alpha"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "lampabot",
+  "version": "0.0.1",
+  "description": "Бот для ламповой беседы перваков КПК",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arcxevodov/lampabot.git"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "js",
+    "ts",
+    "api",
+    "php"
+  ],
+  "author": "Артурио Арчеводов",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arcxevodov/lampabot/issues"
+  },
+  "homepage": "https://github.com/arcxevodov/lampabot#readme"
+}
