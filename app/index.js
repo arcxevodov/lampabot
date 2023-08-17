@@ -28,7 +28,7 @@ function getNumEnding(number, endingArray) {
 
 bot.on(message('text'), async (ctx) => {
     if (await BotFunctions.censureCheck(ctx)) {
-        BotFunctions.addScore(ctx)
+        await BotFunctions.addScore(ctx)
         let score = await BotFunctions.getScore(ctx);
         ctx.reply(`Ох! Кажись ангел улетел от тебя уже на ${score} ${getNumEnding(score, ['метр', 'метра', 'метров'])}!`);
     }
