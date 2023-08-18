@@ -19,6 +19,23 @@ export async function censureCheck(context, isUpdate) {
         })
 }
 
+export async function goodCheck(context, isUpdate) {
+    let mess
+    if (isUpdate) {
+        mess = context.update.edited_message.text
+    } else {
+        mess = context.message.text
+    }
+    return await axios.get(process.env.GOOD_QUERY_URL + mess)
+        .then((response) => {
+            return true
+        })
+        .catch((error) => {
+            console.log(error)
+            return false
+        })
+}
+
 export async function addScore(context, isUpdate, isBad) {
     let mess
     if (isUpdate) {

@@ -16,6 +16,9 @@ switch ($_GET['query']) {
     case 'check':
         censureCheck();
         break;
+    case 'good':
+        goodCheck();
+        break;
     case 'set_score_bad':
         addScore(true);
         break;
@@ -38,6 +41,20 @@ function censureCheck(): void
     if ($_GET['data']) {
         $data = $_GET['data'];
         $parse_result = Censure::parse($data);
+        if ($parse_result) {
+            http_response_code(200);
+        } else {
+            http_response_code(404);
+        }
+        die();
+    }
+}
+
+function goodCheck(): void
+{
+    if ($_GET['data']) {
+        $data = $_GET['data'];
+        $parse_result = $data == 'спасибо';
         if ($parse_result) {
             http_response_code(200);
         } else {
