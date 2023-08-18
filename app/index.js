@@ -12,7 +12,11 @@ bot.command('rating', async (ctx) => {
     let result = '😍 Рейтинг:\n\n🏆 ';
 
     rating.forEach((key, value) => {
-        result += `${value+1}. ${key['full_name'] + ' (' + key['username'] + ')' ?? '@' + key['username']}, от тебя ангел улетел на ${key['count']} ${BotFunctions.getNumEnding(key['count'], ['метр', 'метра', 'метров'])}\n\n`
+        if (key['count'] === 0) {
+            result += `${value+1}. ${key['full_name'] + ' (' + key['username'] + ')' ?? '@' + key['username']}, ангел рядом с тобой!\n\n`
+        } else {
+            result += `${value+1}. ${key['full_name'] + ' (' + key['username'] + ')' ?? '@' + key['username']}, от тебя ангел улетел на ${key['count']} ${BotFunctions.getNumEnding(key['count'], ['метр', 'метра', 'метров'])}\n\n`
+        }
     })
     await ctx.reply(result)
 })
@@ -24,11 +28,21 @@ bot.command('add_me', async (ctx) => {
 })
 
 bot.on(message('text'), async (ctx) => {
-    if (await BotFunctions.censureCheck(ctx)) {
-        await BotFunctions.addScore(ctx)
-        let score = await BotFunctions.getScore(ctx)
+    if (await BotFunctions.censureCheck(ctx, false)) {
+        await BotFunctions.addScore(ctx, false, true)
+        let score = await BotFunctions.getScore(ctx, false)
         let username = '@'+ctx.message.from.username ?? ctx.message.from.first_name
         await ctx.reply(username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+    }
+    if (await BotFunctions.goodCheck(ctx, false)) {
+        await BotFunctions.addScore(ctx, false, false)
+        let score = await BotFunctions.getScore(ctx, false)
+        let username = '@'+ctx.message.from.username ?? ctx.message.from.first_name
+        if (score === 0) {
+            await ctx.reply(username + `, вау, как мило!`)
+        } else {
+            await ctx.reply(username + `, вау, как мило! Ангел приблизился к тебе, и он уже на расстоянии ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+        }
     }
 })
 
@@ -38,6 +52,16 @@ bot.on('edited_message', async (ctx) => {
         let score = await BotFunctions.getScore(ctx, true)
         let username = '@'+ctx.update.edited_message.from.username ?? ctx.update.edited_message.from.first_name
         await ctx.reply(username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+    }
+    if (await BotFunctions.goodCheck(ctx, true)) {
+        await BotFunctions.addScore(ctx, true, false)
+        let score = await BotFunctions.getScore(ctx, true)
+        let username = '@'+ctx.message.from.username ?? ctx.message.from.first_name
+        if (score === 0) {
+            await ctx.reply(username + `, вау, как мило!`)
+        } else {
+            await ctx.reply(username + `, вау, как мило! Ангел приблизился к тебе, и он уже на расстоянии ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+        }
     }
 })
 

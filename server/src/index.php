@@ -61,6 +61,16 @@ function addScore($isBad): void
             } else {
                 $db->exec("INSERT INTO users VALUES ('$user_id', '$username', '$full_name', 7)");
             }
+        } else {
+            if ($user_count !== null) {
+                $num = rand(1, 30);
+                if ($user_count < $num) {
+                    $num = 0;
+                }
+                $db->exec('UPDATE users SET count = ' . $user_count - $num . ' WHERE id = ' . $_GET['user_id']);
+            } else {
+                $db->exec("INSERT INTO users VALUES ('$user_id', '$username', '$full_name', 7)");
+            }
         }
         http_response_code(200);
         die();
