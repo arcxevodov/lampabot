@@ -19,15 +19,15 @@ export async function censureCheck(context, isUpdate) {
         })
 }
 
-export async function addScore(context, isUpdate) {
+export async function addScore(context, isUpdate, isBad) {
     let mess
     if (isUpdate) {
         mess = context.update.edited_message
     } else {
         mess = context.message
     }
-    return await axios.get(process.env.SET_SCORE_QUERY_URL
-        + mess.from.id + '&username=' + mess.from.username
+    let url = isBad ? process.env.SET_SCORE_BAD_QUERY_URL : process.env.SET_SCORE_GOOD_QUERY_URL
+    return await axios.get(url + mess.from.id + '&username=' + mess.from.username
         + '&full_name=' + mess.from.first_name)
         .then((response) => {
             return true

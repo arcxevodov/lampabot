@@ -16,8 +16,11 @@ switch ($_GET['query']) {
     case 'check':
         censureCheck();
         break;
-    case 'set_score':
-        addScore();
+    case 'set_score_bad':
+        addScore(true);
+        break;
+    case 'set_score_good':
+        addScore(false);
         break;
     case 'get_score':
         getScore();
@@ -44,7 +47,7 @@ function censureCheck(): void
     }
 }
 
-function addScore(): void
+function addScore($isBad): void
 {
     if ($_GET['user_id']) {
         $user_id = $_GET['user_id'];
@@ -52,10 +55,12 @@ function addScore(): void
         $full_name = $_GET['full_name'];
         $db = new SQLite3('db.sqlite');
         $user_count = $db->querySingle('SELECT count FROM users WHERE id = ' . $_GET['user_id']);
-        if ($user_count !== null) {
-            $db->exec('UPDATE users SET count = ' . $user_count + rand(1, 30) . ' WHERE id = ' . $_GET['user_id']);
-        } else {
-            $db->exec("INSERT INTO users VALUES ('$user_id', '$username', '$full_name', 7)");
+        if ($isBad) {
+            if ($user_count !== null) {
+                $db->exec('UPDATE users SET count = ' . $user_count + rand(1, 30) . ' WHERE id = ' . $_GET['user_id']);
+            } else {
+                $db->exec("INSERT INTO users VALUES ('$user_id', '$username', '$full_name', 7)");
+            }
         }
         http_response_code(200);
         die();

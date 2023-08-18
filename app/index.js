@@ -34,7 +34,7 @@ bot.on(message('text'), async (ctx) => {
 
 bot.on('edited_message', async (ctx) => {
     if (await BotFunctions.censureCheck(ctx, true)) {
-        await BotFunctions.addScore(ctx, true)
+        await BotFunctions.addScore(ctx, true, true)
         let score = await BotFunctions.getScore(ctx, true)
         let username = '@'+ctx.update.edited_message.from.username ?? ctx.update.edited_message.from.first_name
         await ctx.reply(username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
