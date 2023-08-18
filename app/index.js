@@ -7,30 +7,27 @@ import { message } from 'telegraf/filters'
 
 const bot = new Telegraf(process.env.TOKEN)
 
-function getNumEnding(number, endingArray) {
-    number = number % 100;
-    let ending = '';
-    if (number >= 11 && number <= 19) {
-        ending = endingArray[2];
-    } else {
-        let i = number % 10;
-        switch (i)
-        {
-            case (1): ending = endingArray[0]; break;
-            case (2):
-            case (3):
-            case (4): ending = endingArray[1]; break;
-            default: ending = endingArray[2];
-        }
+bot.command('rating', async (ctx) => {
+    let rating = await BotFunctions.getRating()
+    let result = '😍 Рейтинг:\n\n🏆 ';
+
+    rating.forEach((key, value) => {
+        result += `${value+1}. ${key['full_name'] + ' (@' + key['username'] + ')' ?? '@' + key['username']}, от тебя ангел улетел на ${key['count']} ${BotFunctions.getNumEnding(key['count'], ['метр', 'метра', 'метров'])}\n\n`
+    })
+    await ctx.reply(result)
+})
+
+bot.command('add_me', async (ctx) => {
+    if (await BotFunctions.addMe(ctx)) {
+        await ctx.reply('@' + ctx.message.from.username + ', теперь ты в системе рейтинга!')
     }
-    return ending;
-}
+})
 
 bot.on(message('text'), async (ctx) => {
     if (await BotFunctions.censureCheck(ctx)) {
         await BotFunctions.addScore(ctx)
-        let score = await BotFunctions.getScore(ctx);
-        ctx.reply(`Ох! Кажись ангел улетел от тебя уже на ${score} ${getNumEnding(score, ['метр', 'метра', 'метров'])}!`);
+        let score = await BotFunctions.getScore(ctx)
+        await ctx.reply('@' + ctx.message.from.username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
     }
 })
 
