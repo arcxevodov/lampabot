@@ -41,7 +41,11 @@ bot.on(message('text'), async (ctx) => {
         if (score === 0) {
             await ctx.reply(username + `, вау, как мило!`)
         } else {
-            await ctx.reply(username + `, вау, как мило! Ангел приблизился к тебе, и он уже на расстоянии ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+            if (username === '@MustafaevN') {
+                await ctx.reply(username + `, вау, как мило, Нариман! Ангел в тебе уже на ${score} ${BotFunctions.getNumEnding(score, ['сантиметр', 'сантиметра', 'сантиметров'])}!`)
+            } else {
+                await ctx.reply(username + `, вау, как мило! Ангел приблизился к тебе, и он уже на расстоянии ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+            }
         }
     }
 })
