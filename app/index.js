@@ -33,11 +33,10 @@ bot.on(message('text'), async (ctx) => {
 })
 
 bot.on('edited_message', async (ctx) => {
-    ctx.message = ctx.update.edited_message
-    if (await BotFunctions.censureCheck(ctx)) {
-        await BotFunctions.addScore(ctx)
-        let score = await BotFunctions.getScore(ctx)
-        let username = '@'+ctx.message.from.username ?? ctx.message.from.first_name
+    if (await BotFunctions.censureCheck(ctx, true)) {
+        await BotFunctions.addScore(ctx, true)
+        let score = await BotFunctions.getScore(ctx, true)
+        let username = '@'+ctx.update.edited_message.from.username ?? ctx.update.edited_message.from.first_name
         await ctx.reply(username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
     }
 })

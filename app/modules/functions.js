@@ -2,8 +2,14 @@ import axios from 'axios'
 
 export const name = 'functions'
 
-export async function censureCheck(context) {
-    return await axios.get(process.env.CENSURE_QUERY_URL + context.message.text)
+export async function censureCheck(context, isUpdate) {
+    let mess
+    if (isUpdate) {
+        mess = context.update.edited_message.text
+    } else {
+        mess = context.message.text
+    }
+    return await axios.get(process.env.CENSURE_QUERY_URL + mess)
         .then((response) => {
             return true
         })
@@ -13,10 +19,16 @@ export async function censureCheck(context) {
         })
 }
 
-export async function addScore(context) {
+export async function addScore(context, isUpdate) {
+    let mess
+    if (isUpdate) {
+        mess = context.update.edited_message
+    } else {
+        mess = context.message
+    }
     return await axios.get(process.env.SET_SCORE_QUERY_URL
-        + context.message.from.id + '&username=' + context.message.from.username
-        + '&full_name=' + context.message.from.first_name)
+        + mess.from.id + '&username=' + mess.from.username
+        + '&full_name=' + mess.from.first_name)
         .then((response) => {
             return true
         })
@@ -25,8 +37,14 @@ export async function addScore(context) {
         })
 }
 
-export async function getScore(context) {
-    return await axios.get(process.env.GET_SCORE_QUERY_URL + context.message.from.id)
+export async function getScore(context, isUpdate) {
+    let mess
+    if (isUpdate) {
+        mess = context.update.edited_message
+    } else {
+        mess = context.message
+    }
+    return await axios.get(process.env.GET_SCORE_QUERY_URL + mess.from.id)
         .then((response) => {
             return response.data
         })
