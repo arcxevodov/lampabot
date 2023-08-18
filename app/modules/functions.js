@@ -2,13 +2,16 @@ import axios from 'axios'
 
 export const name = 'functions'
 
-export async function censureCheck(context, isUpdate) {
+export async function censureCheck(context, isUpdate, file) {
     let mess
     if (isUpdate) {
         mess = context.update.edited_message.text
+    } else if (file) {
+        mess = file
     } else {
         mess = context.message.text
     }
+
     return await axios.get(process.env.CENSURE_QUERY_URL + mess)
         .then((response) => {
             return true
@@ -19,10 +22,12 @@ export async function censureCheck(context, isUpdate) {
         })
 }
 
-export async function goodCheck(context, isUpdate) {
+export async function goodCheck(context, isUpdate, file) {
     let mess
     if (isUpdate) {
         mess = context.update.edited_message.text
+    } else if (file) {
+        mess = file
     } else {
         mess = context.message.text
     }
