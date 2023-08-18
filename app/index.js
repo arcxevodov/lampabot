@@ -12,7 +12,7 @@ bot.command('rating', async (ctx) => {
     let result = '😍 Рейтинг:\n\n🏆 ';
 
     rating.forEach((key, value) => {
-        result += `${value+1}. ${key['full_name'] + ' (@' + key['username'] + ')' ?? '@' + key['username']}, от тебя ангел улетел на ${key['count']} ${BotFunctions.getNumEnding(key['count'], ['метр', 'метра', 'метров'])}\n\n`
+        result += `${value+1}. ${key['full_name'] + ' (' + key['username'] + ')' ?? '@' + key['username']}, от тебя ангел улетел на ${key['count']} ${BotFunctions.getNumEnding(key['count'], ['метр', 'метра', 'метров'])}\n\n`
     })
     await ctx.reply(result)
 })
