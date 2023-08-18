@@ -33,6 +33,7 @@ bot.on(message('text'), async (ctx) => {
 })
 
 bot.on('edited_message', async (ctx) => {
+    ctx.message = ctx.update.edited_message
     if (await BotFunctions.censureCheck(ctx)) {
         await BotFunctions.addScore(ctx)
         let score = await BotFunctions.getScore(ctx)
