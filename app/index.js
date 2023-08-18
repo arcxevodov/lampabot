@@ -63,7 +63,7 @@ bot.on('edited_message', async (ctx) => {
     if (await BotFunctions.goodCheck(ctx, true)) {
         await BotFunctions.addScore(ctx, true, false)
         let score = await BotFunctions.getScore(ctx, true)
-        let username = '@'+ctx.message.from.username ?? ctx.message.from.first_name
+        let username = '@'+ctx.edited_message.from.username ?? ctx.edited_message.from.first_name
         if (score === 0) {
             await ctx.reply(username + `, вау, как мило!`)
         } else {
