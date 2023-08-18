@@ -27,7 +27,17 @@ bot.on(message('text'), async (ctx) => {
     if (await BotFunctions.censureCheck(ctx)) {
         await BotFunctions.addScore(ctx)
         let score = await BotFunctions.getScore(ctx)
-        await ctx.reply('@' + ctx.message.from.username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+        let username = '@'+ctx.message.from.username ?? ctx.message.from.first_name
+        await ctx.reply(username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
+    }
+})
+
+bot.on('edited_message', async (ctx) => {
+    if (await BotFunctions.censureCheck(ctx)) {
+        await BotFunctions.addScore(ctx)
+        let score = await BotFunctions.getScore(ctx)
+        let username = '@'+ctx.message.from.username ?? ctx.message.from.first_name
+        await ctx.reply(username + `, ух ох! Ангел улетел от тебя на ${score} ${BotFunctions.getNumEnding(score, ['метр', 'метра', 'метров'])}!`)
     }
 })
 
