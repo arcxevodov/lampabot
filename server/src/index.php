@@ -53,7 +53,7 @@ function addScore(): void
         $db = new SQLite3('db.sqlite');
         $user_count = $db->querySingle('SELECT count FROM users WHERE id = ' . $_GET['user_id']);
         if ($user_count !== null) {
-            $db->exec('UPDATE users SET count = ' . $user_count + 7 . ' WHERE id = ' . $_GET['user_id']);
+            $db->exec('UPDATE users SET count = ' . $user_count + rand(1, 30) . ' WHERE id = ' . $_GET['user_id']);
         } else {
             $db->exec("INSERT INTO users VALUES ('$user_id', '$username', '$full_name', 7)");
         }
