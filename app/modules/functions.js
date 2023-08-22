@@ -17,7 +17,7 @@ export function addScore(context, message) {
     let db = getDatabase()
     db.get(`SELECT count FROM users WHERE id = ${userId}`, (err, row) => {
         if (err) return console.error(`Ошибка получения данных из БД: ${err.message}`)
-        let query = row.count == null
+        let query = row?.count
             ? `UPDATE users SET count = ${Math.ceil(row.count + 5)} WHERE id = ${userId}`
             : `INSERT INTO users VALUES ('${userId}', '${username}', '${fullName}', 7)`
         db.run(query, err => {
