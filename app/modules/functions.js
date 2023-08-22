@@ -24,8 +24,12 @@ export function addScore(context, message) {
             if (err) return console.error(`Ошибка записи в БД: ${err.message}`)
             console.log('Выполнен запрос в БД')
         })
+        if (row == null) {
+            replyScore(context, '🤯 Ого! Ты впервые сказал мат!\nКласс, твой ангел улетел от тебя на')
+            console.log('Человек впервые занесен в БД')
+        }
         if (row != null && (row.count + 5) % 100 === 0) {
-            replyScore(context, `Треш 🤯\nТвой ангел улетел на`)
+            replyScore(context, '🤯 Какой капец!\nТвой ангел улетел на')
             console.log('Отправлен ответ юзеру')
         }
     })
@@ -37,7 +41,7 @@ export function getRating(context) {
     let db = getDatabase()
     db.all('SELECT * FROM users ORDER BY count', (err, rows) => {
         if (err) return console.error(`Ошибка запроса из БД: ${err.message}`)
-        let result = '😇 Антирейтинг:\n\n';
+        let result = '😇 Глянем, кто у нас больше всех матерится:\n\n';
         rows.forEach(row => {
             result += `⭐ ${row['full_name']} (${row['username']}) - ${row['count']} ${getNumEnding(row['count'], ['метр', 'метра', 'метров'])}\n`
         })
