@@ -24,7 +24,7 @@ export function addScore(context, message) {
             if (err) return console.error(`Ошибка записи в БД: ${err.message}`)
             console.log('Выполнен запрос в БД')
         })
-        if ((row.count + 5) % 100 === 0) {
+        if (row != null && (row.count + 5) % 100 === 0) {
             replyScore(context, `Треш 🤯\nТвой ангел улетел на`)
             console.log('Отправлен ответ юзеру')
         }
