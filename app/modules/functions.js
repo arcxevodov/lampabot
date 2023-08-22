@@ -1,117 +1,83 @@
+import {badRegex, getDatabase, getNumEnding, replyScore} from "./const.js";
+
 import axios from 'axios'
+import * as fs from "fs";
+import * as https from "https";
 
 export const name = 'functions'
 
-export async function censureCheck(context, isUpdate, file) {
-    let mess
-    if (isUpdate) {
-        mess = context.update.edited_message.text
-    } else if (file) {
-        mess = file
-    } else {
-        mess = context.message.text
-    }
-
-    return await axios.get(process.env.CENSURE_QUERY_URL + mess)
-        .then((response) => {
-            return true
-        })
-        .catch((error) => {
-            console.log(error)
-            return false
-        })
+export function badCheck(messageText) {
+    return messageText.match(badRegex())
 }
 
-export async function goodCheck(context, isUpdate, file) {
-    let mess
-    if (isUpdate) {
-        mess = context.update.edited_message.text
-    } else if (file) {
-        mess = file
-    } else {
-        mess = context.message.text
-    }
-    return await axios.get(process.env.GOOD_QUERY_URL + mess)
-        .then((response) => {
-            return true
+export function addScore(context, message) {
+    let userId = message.from.id
+    let username = message.from.username ?? 'Никнейм отсутствует'
+    let fullName = message.from.first_name
+    let db = getDatabase()
+    db.get(`SELECT count FROM users WHERE id = ${userId}`, (err, row) => {
+        if (err) return console.error(`Ошибка получения данных из БД: ${err.message}`)
+        let query = row.count
+            ? `UPDATE users SET count = ${Math.ceil(row.count + 5)} WHERE id = ${userId}`
+            : `INSERT INTO users VALUES ('${userId}', '${username}', '${fullName}', 7)`
+        db.run(query, err => {
+            if (err) return console.error(`Ошибка записи в БД: ${err.message}`)
+            console.log('Выполнен запрос в БД')
         })
-        .catch((error) => {
-            console.log(error)
-            return false
-        })
-}
-
-export async function addScore(context, isUpdate, isBad) {
-    let mess
-    if (isUpdate) {
-        mess = context.update.edited_message
-    } else {
-        mess = context.message
-    }
-    let url = isBad ? process.env.SET_SCORE_BAD_QUERY_URL : process.env.SET_SCORE_GOOD_QUERY_URL
-    return await axios.get(url + mess.from.id + '&username=' + mess.from.username
-        + '&full_name=' + mess.from.first_name)
-        .then((response) => {
-            return true
-        })
-        .catch((error) => {
-            return false
-        })
-}
-
-export async function getScore(context, isUpdate) {
-    let mess
-    if (isUpdate) {
-        mess = context.update.edited_message
-    } else {
-        mess = context.message
-    }
-    return await axios.get(process.env.GET_SCORE_QUERY_URL + mess.from.id)
-        .then((response) => {
-            return response.data
-        })
-        .catch((error) => {
-            return false
-        })
-}
-
-export async function getRating() {
-    return await axios.get(process.env.GET_RATING_QUERY_URL)
-        .then((response) => {
-            return response.data
-        })
-        .catch((error) => {
-            return false
-        })
-}
-
-export async function addMe(context) {
-    return await axios.get(process.env.ADD_QUERY_URL + context.message.from.id
-        + '&username=' + context.message.from.username
-        + '&full_name=' + context.message.from.first_name)
-        .then((response) => {
-            return true
-        })
-        .catch((error) => {
-            return false
-        })
-}
-
-export function getNumEnding(number, endingArray) {
-    number = number % 100
-    let ending = ''
-    if (number >= 11 && number <= 19) {
-        ending = endingArray[2]
-    } else {
-        let i = number % 10
-        switch (i)
-        {
-            case (1): ending = endingArray[0]; break
-            case (2):
-            case (3):
-            case (4): ending = endingArray[1]; break
-            default: ending = endingArray[2]
+        if ((row.count + 5) % 100 === 0) {
+            replyScore(context, `Треш 🤯\nТвой ангел улетел на`)
+            console.log('Отправлен ответ юзеру')
         }
-    }
-    return ending
+    })
+    db.close()
+    console.log(`${fullName} поругался матом!`)
+}
+
+export function getRating(context) {
+    let db = getDatabase()
+    db.all('SELECT * FROM users ORDER BY count', (err, rows) => {
+        if (err) return console.error(`Ошибка запроса из БД: ${err.message}`)
+        let result = '😇 Антирейтинг:\n\n';
+        rows.forEach(row => {
+            result += `⭐ ${row['full_name']} (${row['username']}) - ${row['count']} ${getNumEnding(row['count'], ['метр', 'метра', 'метров'])}\n`
+        })
+        context.reply(result)
+    })
+    db.close()
+    console.log(`${context.message.from.first_name} запросил рейтинг`)
+}
+
+export function voiceCheck(context) {
+    context.telegram.getFileLink(context.message.voice.file_id).then((url) => {
+        const file = fs.createWriteStream(`voices/${context.message.voice.file_id}.ogg`);
+        https.get(url, function(response) {
+            response.pipe(file);
+            file.on("finish", () => {
+                file.close();
+            });
+        });
+
+        setTimeout(() => {
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://voice.mcs.mail.ru/asr',
+                headers: {
+                    'Authorization': `Bearer ${process.env.MAIL_TTS_TOKEN}`,
+                    'Content-Type': 'audio/ogg; codecs=opus'
+                },
+                data: fs.readFileSync(`voices/${context.message.voice.file_id}.ogg`)
+            };
+
+            axios.request(config)
+                .then(async (response) => {
+                    if (badCheck(response.data['result']['texts'][0]['text'])) addScore(context, context.message)
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }, 1000)
+    }).catch((err) => {
+        console.log(err)
+    })
 }
