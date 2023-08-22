@@ -17,8 +17,8 @@ bot.on(message('text'), async ctx => {
 })
 
 bot.on('edited_message', async ctx => {
-    if (BotFunctions.badCheck(ctx.edited_message.text))
-        BotFunctions.addScore(ctx, ctx.edited_message)
+    if (BotFunctions.badCheck(ctx.update.edited_message.text))
+        BotFunctions.addScore(ctx, ctx.update.edited_message)
 })
 
 bot.on('voice', async ctx => {
