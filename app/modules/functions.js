@@ -19,7 +19,7 @@ export function addScore(context, message) {
         if (err) return console.error(`Ошибка получения данных из БД: ${err.message}`)
         let query = row?.count
             ? `UPDATE users SET count = ${Math.ceil(row.count + 5)} WHERE id = ${userId}`
-            : `INSERT INTO users VALUES ('${userId}', '${username}', '${fullName}', 7)`
+            : `INSERT INTO users VALUES ('${userId}', '${username}', '${fullName}', 5)`
         db.run(query, err => {
             if (err) return console.error(`Ошибка записи в БД: ${err.message}`)
             console.log('Выполнен запрос в БД')
