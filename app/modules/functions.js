@@ -101,7 +101,7 @@ export function getYesNo(context) {
                 responseType: 'stream',
                 headers: {
                     'Authorization': `Bearer ${process.env.MAIL_TTS_TOKEN}`,
-                    'Content-Type': 'audio/ogg; codecs=opus'
+                    'Content-Type': 'audio/ogg'
                 }
             };
 
