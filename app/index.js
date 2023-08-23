@@ -7,8 +7,12 @@ import { message } from 'telegraf/filters'
 
 const bot = new Telegraf(process.env.TOKEN)
 
-bot.command('rating', async ctx => {
+bot.command('рейтинг', async ctx => {
     BotFunctions.getRating(ctx)
+})
+
+bot.command('данет', async ctx => {
+    BotFunctions.getYesNo(ctx)
 })
 
 bot.on(message('text'), async ctx => {

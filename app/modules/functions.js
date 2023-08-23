@@ -3,6 +3,7 @@ import {badRegex, getDatabase, getNumEnding, replyScore} from "./const.js";
 import axios from 'axios'
 import * as fs from "fs";
 import * as https from "https";
+import {Input} from "telegraf";
 
 export const name = 'functions'
 
@@ -41,10 +42,11 @@ export function getRating(context) {
     let db = getDatabase()
     db.all('SELECT * FROM users ORDER BY count', (err, rows) => {
         if (err) return console.error(`Ошибка запроса из БД: ${err.message}`)
-        let result = '😇 Глянем, кто у нас больше всех матерится:\n\n';
+        let result = '😇 Глянем, кто у нас меньше всех матерится:\n\n';
         rows.forEach(row => {
             result += `⭐ ${row['full_name']} (${row['username']}) - ${row['count']} ${getNumEnding(row['count'], ['метр', 'метра', 'метров'])}\n`
         })
+        result += '\n\nЕсли тебя нет в списке, поздравляю! Ни одного мата 😍 '
         context.reply(result)
     })
     db.close()
@@ -84,4 +86,13 @@ export function voiceCheck(context) {
     }).catch((err) => {
         console.log(err)
     })
+}
+
+export function getYesNo(context) {
+    let result = axios.get('https://yesno.wtf/api')
+        .then(response => {
+            context.replyWithPhoto(Input.fromURL(response.data.image), {
+                reply_to_message_id: context.message.message_id
+            })
+        })
 }
