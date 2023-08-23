@@ -94,5 +94,23 @@ export function getYesNo(context) {
             context.replyWithVideo(Input.fromURL(response.data.image), {
                 reply_to_message_id: context.message.message_id
             })
+            let config = {
+                method: 'get',
+                maxBodyLength: Infinity,
+                url: 'https://voice.mcs.mail.ru/tts?text=да',
+                headers: {
+                    'Authorization': `Bearer ${process.env.MAIL_TTS_TOKEN}`,
+                    'Content-Type': 'audio/ogg; codecs=opus'
+                }
+            };
+
+            axios.request(config)
+                .then((response) => {
+                    let fileData = Buffer.from(response.data, 'binary');
+                    fs.writeFile(`voices/answer.ogg`, fileData);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         })
 }
