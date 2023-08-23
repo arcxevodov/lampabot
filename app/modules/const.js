@@ -36,7 +36,7 @@ export function replyScore(context, userMessage) {
     let db = getDatabase()
     db.get(`SELECT count FROM users WHERE id = ${context.message.from.id}`, (err, row) => {
         if (err) return console.error(`Ошибка запроса из БД: ${err.message}`)
-        context.reply(`${userMessage} ${row.count} ${getNumEnding(row.count, ['метр', 'метра', 'метров'])}`, {
+        context.reply(`${userMessage} ${row?.count} ${getNumEnding(row.count, ['метр', 'метра', 'метров'])}`, {
             reply_to_message_id: context.message.message_id
         })
     })
