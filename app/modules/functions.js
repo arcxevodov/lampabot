@@ -98,6 +98,7 @@ export function getYesNo(context) {
                 method: 'get',
                 maxBodyLength: Infinity,
                 url: 'https://voice.mcs.mail.ru/tts?text=конечно',
+                responseType: 'stream',
                 headers: {
                     'Authorization': `Bearer ${process.env.MAIL_TTS_TOKEN}`,
                     'Content-Type': 'audio/ogg; codecs=opus'
@@ -106,11 +107,7 @@ export function getYesNo(context) {
 
             axios.request(config)
                 .then(async (response) => {
-                    await context.reply(response.data);
-                    // let fileData = await Buffer.from(response.data, 'binary');
-                    // await context.replyWithVoice(Input.fromBuffer(fileData), {
-                    //     reply_to_message_id: context.message.message_id
-                    // })
+                    response.data.pipe(fs.createWriteStream('voices/yes.ogg'))
                 })
                 .catch((error) => {
                     console.log(error);
