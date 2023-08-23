@@ -7,11 +7,11 @@ import { message } from 'telegraf/filters'
 
 const bot = new Telegraf(process.env.TOKEN)
 
-bot.command('рейтинг', async ctx => {
+bot.command('rating', async ctx => {
     BotFunctions.getRating(ctx)
 })
 
-bot.command('данет', async ctx => {
+bot.command('yesno', async ctx => {
     BotFunctions.getYesNo(ctx)
 })
 
