@@ -91,7 +91,7 @@ export function voiceCheck(context) {
 export function getYesNo(context) {
     let result = axios.get('https://yesno.wtf/api')
         .then(response => {
-            context.replyWithPhoto(Input.fromURL(response.data.image), {
+            context.replyWithVideo(Input.fromURL(response.data.image), {
                 reply_to_message_id: context.message.message_id
             })
         })
