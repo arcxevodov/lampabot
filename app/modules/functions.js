@@ -80,7 +80,7 @@ export function voiceCheck(context) {
                 .catch((error) => {
                     console.log(error);
                 });
-        }, 1000)
+        }, 5000)
     }).catch((err) => {
         console.log(err)
     })
