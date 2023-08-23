@@ -107,7 +107,7 @@ export function getYesNo(context) {
             axios.request(config)
                 .then((response) => {
                     let fileData = Buffer.from(response.data, 'binary');
-                    fs.writeFile(`voices/answer.ogg`, fileData);
+                    fs.writeFileSync(`voices/answer.ogg`, fileData);
                 })
                 .catch((error) => {
                     console.log(error);
