@@ -108,6 +108,9 @@ export function getYesNo(context) {
                 .then((response) => {
                     let fileData = Buffer.from(response.data, 'binary');
                     fs.writeFileSync(`voices/answer.ogg`, fileData);
+                    context.replyWithVoice(Input.fromLocalFile('voices/answer.ogg'), {
+                        reply_to_message_id: context.message.message_id
+                    })
                 })
                 .catch((error) => {
                     console.log(error);
