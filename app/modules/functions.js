@@ -7,7 +7,7 @@ import * as https from "https";
 export const name = 'functions'
 
 export function badCheck(messageText) {
-    return messageText.toLowerCase().match(badRegex())
+    return messageText?.toLowerCase()?.match(badRegex()) ?? false
 }
 
 export function addScore(context, message) {
