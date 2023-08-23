@@ -89,31 +89,10 @@ export function voiceCheck(context) {
 }
 
 export function getYesNo(context) {
-    let result = axios.get('https://yesno.wtf/api')
+    axios.get('https://yesno.wtf/api')
         .then(response => {
             context.replyWithVideo(Input.fromURL(response.data.image), {
                 reply_to_message_id: context.message.message_id
             })
-            let config = {
-                method: 'get',
-                maxBodyLength: Infinity,
-                url: 'https://voice.mcs.mail.ru/tts?text=конечно',
-                responseType: 'stream',
-                headers: {
-                    'Authorization': `Bearer ${process.env.MAIL_TTS_TOKEN}`,
-                    'Content-Type': 'audio/ogg'
-                }
-            };
-
-            axios.request(config)
-                .then(async (response) => {
-                    response.data.pipe(fs.createWriteStream('voices/yes.ogg'))
-                    context.replyWithVoice(Input.fromLocalFile('voices/yes.ogg'), {
-                        reply_to_message_id: context.message.message_id
-                    })
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
         })
 }
