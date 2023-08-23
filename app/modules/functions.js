@@ -105,9 +105,9 @@ export function getYesNo(context) {
             };
 
             axios.request(config)
-                .then((response) => {
-                    let fileData = Buffer.from(response.data, 'binary');
-                    context.replyWithVoice(Input.fromBuffer(fileData), {
+                .then(async (response) => {
+                    let fileData = await Buffer.from(response.data, 'binary');
+                    await context.replyWithVoice(Input.fromBuffer(fileData), {
                         reply_to_message_id: context.message.message_id
                     })
                 })
