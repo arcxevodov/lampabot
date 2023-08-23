@@ -108,6 +108,9 @@ export function getYesNo(context) {
             axios.request(config)
                 .then(async (response) => {
                     response.data.pipe(fs.createWriteStream('voices/yes.ogg'))
+                    context.replyWithVoice(Input.fromLocalFile('voices/yes.ogg'), {
+                        reply_to_message_id: context.message.message_id
+                    })
                 })
                 .catch((error) => {
                     console.log(error);
