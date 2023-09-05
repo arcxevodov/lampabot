@@ -96,3 +96,7 @@ export function getYesNo(context) {
             })
         })
 }
+
+export function checkArtur(context) {
+    return context.message.from.id == "5897871431"
+}

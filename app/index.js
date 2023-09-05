@@ -18,6 +18,9 @@ bot.command('yesno', async ctx => {
 bot.on(message('text'), async ctx => {
     if (BotFunctions.badCheck(ctx.message.text))
         BotFunctions.addScore(ctx, ctx.message)
+    if (BotFunctions.checkArtur(ctx))
+        bot.sendSticker("CAACAgIAAxkBAAEKOopk90UVmZTFWjBucc--Zx9wIVPKmwAC4jYAAsMQwUtQK9WQhyLA3DAE")
+
 })
 
 bot.on('edited_message', async ctx => {
